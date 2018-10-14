@@ -81,47 +81,49 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./create.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./get.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./create.js":
-/*!*******************!*\
-  !*** ./create.js ***!
-  \*******************/
+/***/ "./get.js":
+/*!****************!*\
+  !*** ./get.js ***!
+  \****************/
 /*! exports provided: main */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "main", function() { return main; });
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! uuid */ "uuid");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(uuid__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _libs_dynamodb_lib__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./libs/dynamodb-lib */ "./libs/dynamodb-lib.js");
-/* harmony import */ var _libs_response_lib__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./libs/response-lib */ "./libs/response-lib.js");
-
+/* harmony import */ var _libs_dynamodb_lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./libs/dynamodb-lib */ "./libs/dynamodb-lib.js");
+/* harmony import */ var _libs_response_lib__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./libs/response-lib */ "./libs/response-lib.js");
 
 
 
 async function main(event, context, callback) {
-  const data = JSON.parse(event.body);
   const params = {
     TableName: "tournaments",
-    Item: {
+    // 'Key' defines the partition key and sort key of the item to be retrieved
+    // - 'userId': Identity Pool identity id of the authenticated user
+    // - 'tournamentId': path parameter
+    Key: {
       userId: event.requestContext.identity.cognitoIdentityId,
-      tournamentId: uuid__WEBPACK_IMPORTED_MODULE_0___default.a.v1(),
-      content: data.content,
-      attachment: data.attachment,
-      createdAt: Date.now()
+      tournamentId: event.pathParameters.id
     }
   };
 
   try {
-    await _libs_dynamodb_lib__WEBPACK_IMPORTED_MODULE_1__["call"]("put", params);
-    callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_2__["success"])(params.Item));
+    const result = await _libs_dynamodb_lib__WEBPACK_IMPORTED_MODULE_0__["call"]("get", params);
+    if (result.Item) {
+      // Return the retrieved item
+      callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_1__["success"])(result.Item));
+    } else {
+      callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_1__["failure"])({ status: false, error: "Item not found." }));
+    }
   } catch (e) {
-    callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_2__["failure"])({ status: false }));
+    console.log(e);
+    callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_1__["failure"])({ status: false }));
   }
 }
 
@@ -192,18 +194,7 @@ function buildResponse(statusCode, body) {
 
 module.exports = require("aws-sdk");
 
-/***/ }),
-
-/***/ "uuid":
-/*!***********************!*\
-  !*** external "uuid" ***!
-  \***********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("uuid");
-
 /***/ })
 
 /******/ })));
-//# sourceMappingURL=create.js.map
+//# sourceMappingURL=get.js.map
