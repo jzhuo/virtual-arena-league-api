@@ -81,10 +81,47 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./update.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./delete.js");
 /******/ })
 /************************************************************************/
 /******/ ({
+
+/***/ "./delete.js":
+/*!*******************!*\
+  !*** ./delete.js ***!
+  \*******************/
+/*! exports provided: main */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "main", function() { return main; });
+/* harmony import */ var _libs_dynamodb_lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./libs/dynamodb-lib */ "./libs/dynamodb-lib.js");
+/* harmony import */ var _libs_response_lib__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./libs/response-lib */ "./libs/response-lib.js");
+
+
+
+async function main(event, context, callback) {
+  const params = {
+    TableName: "tournaments",
+    // 'Key' defines the partition key and sort key of the item to be removed
+    // - 'userId': Identity Pool identity id of the authenticated user
+    // - 'tournamentId': path parameter
+    Key: {
+      userId: event.requestContext.identity.cognitoIdentityId,
+      tournamentId: event.pathParameters.id
+    }
+  };
+
+  try {
+    const result = await _libs_dynamodb_lib__WEBPACK_IMPORTED_MODULE_0__["call"]("delete", params);
+    callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_1__["success"])({ status: true }));
+  } catch (e) {
+    callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_1__["failure"])({ status: false }));
+  }
+}
+
+/***/ }),
 
 /***/ "./libs/dynamodb-lib.js":
 /*!******************************!*\
@@ -142,52 +179,6 @@ function buildResponse(statusCode, body) {
 
 /***/ }),
 
-/***/ "./update.js":
-/*!*******************!*\
-  !*** ./update.js ***!
-  \*******************/
-/*! exports provided: main */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "main", function() { return main; });
-/* harmony import */ var _libs_dynamodb_lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./libs/dynamodb-lib */ "./libs/dynamodb-lib.js");
-/* harmony import */ var _libs_response_lib__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./libs/response-lib */ "./libs/response-lib.js");
-
-
-
-async function main(event, context, callback) {
-  const data = JSON.parse(event.body);
-  const params = {
-    TableName: "tournaments",
-    // 'Key' defines the partition key and sort key of the item to be updated
-    // - 'userId': Identity Pool identity id of the authenticated user
-    // - 'tournamentId': path parameter
-    Key: {
-      userId: event.requestContext.identity.cognitoIdentityId,
-      tournamentId: event.pathParameters.id
-    },
-    // 'UpdateExpression' defines the attributes to be updated
-    // 'ExpressionAttributeValues' defines the value in the update expression
-    UpdateExpression: "SET content = :content, attachment = :attachment",
-    ExpressionAttributeValues: {
-      ":attachment": data.attachment ? data.attachment : null,
-      ":content": data.content ? data.content : null
-    },
-    ReturnValues: "ALL_NEW"
-  };
-
-  try {
-    const result = await _libs_dynamodb_lib__WEBPACK_IMPORTED_MODULE_0__["call"]("update", params);
-    callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_1__["success"])({ status: true }));
-  } catch (e) {
-    callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_1__["failure"])({ status: false }));
-  }
-}
-
-/***/ }),
-
 /***/ "aws-sdk":
 /*!**************************!*\
   !*** external "aws-sdk" ***!
@@ -200,4 +191,4 @@ module.exports = require("aws-sdk");
 /***/ })
 
 /******/ })));
-//# sourceMappingURL=update.js.map
+//# sourceMappingURL=delete.js.map
