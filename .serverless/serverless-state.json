@@ -6,10 +6,25 @@
     },
     "provider": {
       "stage": "prod",
-      "region": "us-east-2",
+      "region": "us-east-1",
       "variableSyntax": "\\${([ ~:a-zA-Z0-9._'\",\\-\\/\\(\\)]+?)}",
       "name": "aws",
       "runtime": "nodejs8.10",
+      "iamRoleStatements": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "dynamodb:DescribeTable",
+            "dynamodb:Query",
+            "dynamodb:Scan",
+            "dynamodb:GetItem",
+            "dynamodb:PutItem",
+            "dynamodb:UpdateItem",
+            "dynamodb:DeleteItem"
+          ],
+          "Resource": "arn:aws:dynamodb:us-east-2:*:*"
+        }
+      ],
       "versionFunctions": true,
       "remoteFunctionData": null,
       "compiledCloudFormationTemplate": {
@@ -128,6 +143,9 @@
                             "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/virtual-arena-league-api-prod-delete:*:*"
                           }
                         ]
+                      },
+                      {
+                        "$ref": "$[\"service\"][\"provider\"][\"iamRoleStatements\"][0]"
                       }
                     ]
                   }
@@ -140,7 +158,7 @@
                   [
                     "virtual-arena-league-api",
                     "prod",
-                    "us-east-2",
+                    "us-east-1",
                     "lambdaRole"
                   ]
                 ]
@@ -154,7 +172,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/virtual-arena-league-api/prod/1539493473928-2018-10-14T05:04:33.928Z/virtual-arena-league-api.zip"
+                "S3Key": "serverless/virtual-arena-league-api/prod/1539512018831-2018-10-14T10:13:38.831Z/virtual-arena-league-api.zip"
               },
               "FunctionName": "virtual-arena-league-api-prod-create",
               "Handler": "create.main",
@@ -173,14 +191,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "CreateLambdaVersionMmQ3hYhONE1gMS8B9nkRAwJEHZ2paimfWHrv7mMava0": {
+          "CreateLambdaVersiond4QwyV9so2SQRAqS0SgbBLmlPgDPiuABbqan2dBgAL8": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateLambdaFunction"
               },
-              "CodeSha256": "fPLlqV1Y7HOyOkVS3J8tdRgL57s2fgNc02ZvXKFB1LQ="
+              "CodeSha256": "McZ6/JtvHBQFOWHgfFeH3vZatVvxzQjMHF7zjRk0JuY="
             }
           },
           "GetLambdaFunction": {
@@ -190,7 +208,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/virtual-arena-league-api/prod/1539493473928-2018-10-14T05:04:33.928Z/virtual-arena-league-api.zip"
+                "S3Key": "serverless/virtual-arena-league-api/prod/1539512018831-2018-10-14T10:13:38.831Z/virtual-arena-league-api.zip"
               },
               "FunctionName": "virtual-arena-league-api-prod-get",
               "Handler": "get.main",
@@ -209,14 +227,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "GetLambdaVersionrWAZMQXsqWucEhkXHbPgYh5nZY3qsqOTDOXurkw": {
+          "GetLambdaVersionqrCeaJXzRUBExzQPNQQa4PH23BUZu768WVicdXZgk": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetLambdaFunction"
               },
-              "CodeSha256": "fPLlqV1Y7HOyOkVS3J8tdRgL57s2fgNc02ZvXKFB1LQ="
+              "CodeSha256": "McZ6/JtvHBQFOWHgfFeH3vZatVvxzQjMHF7zjRk0JuY="
             }
           },
           "ListLambdaFunction": {
@@ -226,7 +244,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/virtual-arena-league-api/prod/1539493473928-2018-10-14T05:04:33.928Z/virtual-arena-league-api.zip"
+                "S3Key": "serverless/virtual-arena-league-api/prod/1539512018831-2018-10-14T10:13:38.831Z/virtual-arena-league-api.zip"
               },
               "FunctionName": "virtual-arena-league-api-prod-list",
               "Handler": "list.main",
@@ -245,14 +263,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "ListLambdaVersion9Scoe8L3O81R5Tf3YRkO0xK9RntvPHWFqt4yxVg45I": {
+          "ListLambdaVersiondqGRc401qAaGVBud5qqnHn0Suibo5LiR2Yg9ESeSqpw": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ListLambdaFunction"
               },
-              "CodeSha256": "fPLlqV1Y7HOyOkVS3J8tdRgL57s2fgNc02ZvXKFB1LQ="
+              "CodeSha256": "McZ6/JtvHBQFOWHgfFeH3vZatVvxzQjMHF7zjRk0JuY="
             }
           },
           "UpdateLambdaFunction": {
@@ -262,7 +280,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/virtual-arena-league-api/prod/1539493473928-2018-10-14T05:04:33.928Z/virtual-arena-league-api.zip"
+                "S3Key": "serverless/virtual-arena-league-api/prod/1539512018831-2018-10-14T10:13:38.831Z/virtual-arena-league-api.zip"
               },
               "FunctionName": "virtual-arena-league-api-prod-update",
               "Handler": "update.main",
@@ -281,14 +299,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "UpdateLambdaVersioneNe2FRYiS1jfpmDrEtmTyonm2asT8YMMBxfoYa2Nw": {
+          "UpdateLambdaVersion62pV81qikwGHk1YifPeDbAcOH1KI8SL9ZAtxjpBR2M": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UpdateLambdaFunction"
               },
-              "CodeSha256": "fPLlqV1Y7HOyOkVS3J8tdRgL57s2fgNc02ZvXKFB1LQ="
+              "CodeSha256": "McZ6/JtvHBQFOWHgfFeH3vZatVvxzQjMHF7zjRk0JuY="
             }
           },
           "DeleteLambdaFunction": {
@@ -298,7 +316,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/virtual-arena-league-api/prod/1539493473928-2018-10-14T05:04:33.928Z/virtual-arena-league-api.zip"
+                "S3Key": "serverless/virtual-arena-league-api/prod/1539512018831-2018-10-14T10:13:38.831Z/virtual-arena-league-api.zip"
               },
               "FunctionName": "virtual-arena-league-api-prod-delete",
               "Handler": "delete.main",
@@ -317,14 +335,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "DeleteLambdaVersion5tvrZODe3EtNhjXVhYZYBnFDfPmlKx8z9aq3a2UKlc": {
+          "DeleteLambdaVersionQP7XXTomzdbuHHmxqGkDsmyTWFE6oD7NYYA6cqUVC7c": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DeleteLambdaFunction"
               },
-              "CodeSha256": "fPLlqV1Y7HOyOkVS3J8tdRgL57s2fgNc02ZvXKFB1LQ="
+              "CodeSha256": "McZ6/JtvHBQFOWHgfFeH3vZatVvxzQjMHF7zjRk0JuY="
             }
           },
           "ApiGatewayRestApi": {
@@ -674,7 +692,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1539493473945": {
+          "ApiGatewayDeployment1539512018848": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -937,31 +955,31 @@
           "CreateLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateLambdaVersionMmQ3hYhONE1gMS8B9nkRAwJEHZ2paimfWHrv7mMava0"
+              "Ref": "CreateLambdaVersiond4QwyV9so2SQRAqS0SgbBLmlPgDPiuABbqan2dBgAL8"
             }
           },
           "GetLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetLambdaVersionrWAZMQXsqWucEhkXHbPgYh5nZY3qsqOTDOXurkw"
+              "Ref": "GetLambdaVersionqrCeaJXzRUBExzQPNQQa4PH23BUZu768WVicdXZgk"
             }
           },
           "ListLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ListLambdaVersion9Scoe8L3O81R5Tf3YRkO0xK9RntvPHWFqt4yxVg45I"
+              "Ref": "ListLambdaVersiondqGRc401qAaGVBud5qqnHn0Suibo5LiR2Yg9ESeSqpw"
             }
           },
           "UpdateLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UpdateLambdaVersioneNe2FRYiS1jfpmDrEtmTyonm2asT8YMMBxfoYa2Nw"
+              "Ref": "UpdateLambdaVersion62pV81qikwGHk1YifPeDbAcOH1KI8SL9ZAtxjpBR2M"
             }
           },
           "DeleteLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DeleteLambdaVersion5tvrZODe3EtNhjXVhYZYBnFDfPmlKx8z9aq3a2UKlc"
+              "Ref": "DeleteLambdaVersionQP7XXTomzdbuHHmxqGkDsmyTWFE6oD7NYYA6cqUVC7c"
             }
           },
           "ServiceEndpoint": {
@@ -974,7 +992,7 @@
                   {
                     "Ref": "ApiGatewayRestApi"
                   },
-                  ".execute-api.us-east-2.",
+                  ".execute-api.us-east-1.",
                   {
                     "Ref": "AWS::URLSuffix"
                   },
@@ -1233,7 +1251,7 @@
     }
   },
   "package": {
-    "artifactDirectoryName": "serverless/virtual-arena-league-api/prod/1539493473928-2018-10-14T05:04:33.928Z",
+    "artifactDirectoryName": "serverless/virtual-arena-league-api/prod/1539512018831-2018-10-14T10:13:38.831Z",
     "artifact": ""
   }
 }
