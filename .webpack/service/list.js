@@ -81,53 +81,10 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./get.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./list.js");
 /******/ })
 /************************************************************************/
 /******/ ({
-
-/***/ "./get.js":
-/*!****************!*\
-  !*** ./get.js ***!
-  \****************/
-/*! exports provided: main */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "main", function() { return main; });
-/* harmony import */ var _libs_dynamodb_lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./libs/dynamodb-lib */ "./libs/dynamodb-lib.js");
-/* harmony import */ var _libs_response_lib__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./libs/response-lib */ "./libs/response-lib.js");
-
-
-
-async function main(event, context, callback) {
-  const params = {
-    TableName: "tournaments",
-    // 'Key' defines the partition key and sort key of the item to be retrieved
-    // - 'userId': Identity Pool identity id of the authenticated user
-    // - 'tournamentId': path parameter
-    Key: {
-      userId: event.requestContext.identity.cognitoIdentityId,
-      tournamentId: event.pathParameters.id
-    }
-  };
-
-  try {
-    const result = await _libs_dynamodb_lib__WEBPACK_IMPORTED_MODULE_0__["call"]("get", params);
-    if (result.Item) {
-      // Return the retrieved item
-      callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_1__["success"])(result.Item));
-    } else {
-      callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_1__["failure"])({ status: false, error: "Item not found." }));
-    }
-  } catch (e) {
-    console.log(e);
-    callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_1__["failure"])({ status: false }));
-  }
-}
-
-/***/ }),
 
 /***/ "./libs/dynamodb-lib.js":
 /*!******************************!*\
@@ -185,6 +142,47 @@ function buildResponse(statusCode, body) {
 
 /***/ }),
 
+/***/ "./list.js":
+/*!*****************!*\
+  !*** ./list.js ***!
+  \*****************/
+/*! exports provided: main */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "main", function() { return main; });
+/* harmony import */ var _libs_dynamodb_lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./libs/dynamodb-lib */ "./libs/dynamodb-lib.js");
+/* harmony import */ var _libs_response_lib__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./libs/response-lib */ "./libs/response-lib.js");
+
+
+
+async function main(event, context, callback) {
+  const params = {
+    TableName: "tournaments",
+    // 'KeyConditionExpression' defines the condition for the query
+    // - 'userId = :userId': only return items with matching 'userId'
+    //   partition key
+    // 'ExpressionAttributeValues' defines the value in the condition
+    // - ':userId': defines 'userId' to be Identity Pool identity id
+    //   of the authenticated user
+    KeyConditionExpression: "userId = :userId",
+    ExpressionAttributeValues: {
+      ":userId": event.requestContext.identity.cognitoIdentityId
+    }
+  };
+
+  try {
+    const result = await _libs_dynamodb_lib__WEBPACK_IMPORTED_MODULE_0__["call"]("query", params);
+    // Return the matching list of items in response body
+    callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_1__["success"])(result.Items));
+  } catch (e) {
+    callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_1__["failure"])({ status: false }));
+  }
+}
+
+/***/ }),
+
 /***/ "aws-sdk":
 /*!**************************!*\
   !*** external "aws-sdk" ***!
@@ -197,4 +195,4 @@ module.exports = require("aws-sdk");
 /***/ })
 
 /******/ })));
-//# sourceMappingURL=get.js.map
+//# sourceMappingURL=list.js.map
