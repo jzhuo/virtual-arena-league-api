@@ -63,12 +63,24 @@ functions:
 
   list:
     # Defines an HTTP API endpoint that calls the main function in list.js
-    # - path: url path is /notes
+    # - path: url path is /tournaments
     # - method: GET request
     handler: list.main
     events:
       - http:
-          path: notes
+          path: tournaments
           method: get
+          cors: true
+          authorizer: aws_iam
+  
+  update:
+    # Defines an HTTP API endpoint that calls the main function in update.js
+    # - path: url path is /tournaments/{id}
+    # - method: PUT request
+    handler: update.main
+    events:
+      - http:
+          path: tournaments/{id}
+          method: put
           cors: true
           authorizer: aws_iam

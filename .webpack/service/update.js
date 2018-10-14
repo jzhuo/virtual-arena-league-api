@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./list.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./update.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -142,10 +142,10 @@ function buildResponse(statusCode, body) {
 
 /***/ }),
 
-/***/ "./list.js":
-/*!*****************!*\
-  !*** ./list.js ***!
-  \*****************/
+/***/ "./update.js":
+/*!*******************!*\
+  !*** ./update.js ***!
+  \*******************/
 /*! exports provided: main */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -158,24 +158,29 @@ __webpack_require__.r(__webpack_exports__);
 
 
 async function main(event, context, callback) {
+  const data = JSON.parse(event.body);
   const params = {
     TableName: "tournaments",
-    // 'KeyConditionExpression' defines the condition for the query
-    // - 'userId = :userId': only return items with matching 'userId'
-    //   partition key
-    // 'ExpressionAttributeValues' defines the value in the condition
-    // - ':userId': defines 'userId' to be Identity Pool identity id
-    //   of the authenticated user
-    KeyConditionExpression: "userId = :userId",
+    // 'Key' defines the partition key and sort key of the item to be updated
+    // - 'userId': Identity Pool identity id of the authenticated user
+    // - 'tournamentId': path parameter
+    Key: {
+      userId: event.requestContext.identity.cognitoIdentityId,
+      tournamentId: event.pathParameters.id
+    },
+    // 'UpdateExpression' defines the attributes to be updated
+    // 'ExpressionAttributeValues' defines the value in the update expression
+    UpdateExpression: "SET content = :content, attachment = :attachment",
     ExpressionAttributeValues: {
-      ":userId": event.requestContext.identity.cognitoIdentityId
-    }
+      ":attachment": data.attachment ? data.attachment : null,
+      ":content": data.content ? data.content : null
+    },
+    ReturnValues: "ALL_NEW"
   };
 
   try {
-    const result = await _libs_dynamodb_lib__WEBPACK_IMPORTED_MODULE_0__["call"]("query", params);
-    // Return the matching list of items in response body
-    callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_1__["success"])(result.Items));
+    const result = await _libs_dynamodb_lib__WEBPACK_IMPORTED_MODULE_0__["call"]("update", params);
+    callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_1__["success"])({ status: true }));
   } catch (e) {
     callback(null, Object(_libs_response_lib__WEBPACK_IMPORTED_MODULE_1__["failure"])({ status: false }));
   }
@@ -195,4 +200,4 @@ module.exports = require("aws-sdk");
 /***/ })
 
 /******/ })));
-//# sourceMappingURL=list.js.map
+//# sourceMappingURL=update.js.map
