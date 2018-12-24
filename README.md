@@ -1,4 +1,4 @@
-# Serverless Node.js Starter
+# Serverless Node.js API for Virtual Arena League Platform created at Hack UMass VI
 
 A Serverless starter that adds ES7 syntax, serverless-offline, environment variables, and unit test support. Part of the [Serverless Stack](http://serverless-stack.com) guide.
 
